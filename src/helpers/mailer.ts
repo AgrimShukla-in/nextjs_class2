@@ -14,12 +14,12 @@ export const sendEmail = async (
   if (emailType === 'verify') {
     await User.findOneAndUpdate(
       { _id: userId },
-      { verifyToken: hash, verifyExpiry: Date.now() + 3600000 }
+      {$set:{ verifyToken: hash, verifyExpiry: Date.now() + 3600000 }}
     );
   } else {
     await User.findOneAndUpdate(
       { _id: userId },
-      { forgetPasswordToken: hash, forgetPasswordExpiry: Date.now() + 3600000 }
+      {$set:{ forgetPasswordToken: hash, forgetPasswordExpiry: Date.now() + 3600000 }}
     );
   }
 
@@ -38,7 +38,7 @@ export const sendEmail = async (
   const baseUrl = process.env.DOMAIN || 'http://localhost:3000';
   const linkPath =
     emailType === 'verify'
-      ? `/api/auth/verify/${encodeURIComponent(hash)}`
+      ? `/verifyemail/${encodeURIComponent(hash)}`
       : `/reset-password/${encodeURIComponent(hash)}`;
   const link = `${baseUrl}${linkPath}`;
 

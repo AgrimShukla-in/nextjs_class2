@@ -9,14 +9,16 @@ export async function POST(request: NextRequest) {
     try{
         const reqBody = await request.json();
         const {token} = reqBody;
+        console.log(token);
         if(!token){
             return NextResponse.json({message: "Token is required"}, {status: 400})
         }
-        const user = await User.findOne({verifyToken : token , verifyTokenExpiry: {$gt: Date.now()}});
+        const user = await User.findOne({verifyToken : token });
+        console.log(user);
         if(!user){
             return NextResponse.json({message: "Token is invalid or has expired"}, {status: 400})
         }
-        user.isVerified = true;
+        user.isVerifide = true;
         user.verifyToken = undefined;
         user.verifyExpiry = undefined;
         await user.save();
